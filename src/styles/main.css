@@ -1,0 +1,6 @@
+/* main.css */
+@import './base/reset.css';
+@import './base/typography.css';
+@import './blocks/buttons.css';
+@import './blocks/blocks.css';
+@import './themes/default.css'; /* Change this import to switch themes */

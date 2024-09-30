@@ -1,0 +1,7 @@
+/* _default.css */
+.modulator {
+  --primary-color: #007bff;
+  --text-color: #000;
+
+  color: var(--text-color);
+}
