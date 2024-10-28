@@ -40,5 +40,3 @@ An accessibility-focused visual block editor.
 - **Set Up the Development Environment**:
    - Version control (e.g., Git).
    - CI/CD pipeline (e.g., GitHub Actions).
-
-Would you like to proceed with any specific step or need further details?
