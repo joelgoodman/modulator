@@ -1,0 +1,78 @@
+/* tokens.css */
+:root {
+  /* Colors */
+  --editor-bg: #ffffff;
+  --surface-1: #ffffff;
+  --surface-2: #f9fafb;
+  --surface-3: #f3f4f6;
+
+  /* Text Colors */
+  --text-1: #111827;
+  --text-2: #374151;
+  --text-3: #6b7280;
+
+  /* Accent Colors */
+  --accent-1: #2563eb;
+  --accent-2: #3b82f6;
+  --accent-3: #60a5fa;
+
+  /* Border Colors */
+  --border-1: #e5e7eb;
+  --border-2: #d1d5db;
+  --border-3: #9ca3af;
+
+  /* Spacing */
+  --space-1: 0.25rem; /* 4px */
+  --space-2: 0.5rem; /* 8px */
+  --space-3: 0.75rem; /* 12px */
+  --space-4: 1rem; /* 16px */
+  --space-5: 1.5rem; /* 24px */
+  --space-6: 2rem; /* 32px */
+
+  /* Typography */
+  --font-sans: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+  --font-size-sm: 0.875rem;
+  --font-size-base: 1rem;
+  --font-size-lg: 1.125rem;
+  --font-size-xl: 1.25rem;
+  --font-size-2xl: 1.5rem;
+
+  /* Line Heights */
+  --line-height-tight: 1.25;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.75;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+
+  /* Transitions */
+  --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-normal: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Focus Ring */
+  --focus-ring: 0 0 0 3px var(--accent-3);
+
+  /* Block Specific */
+  --block-spacing: var(--space-2);
+  --block-radius: 4px;
+  --toolbar-height: 48px;
+}
+
+/* Dark theme tokens */
+[data-theme='dark'] {
+  --editor-bg: #1a1b1e;
+  --surface-1: #1a1b1e;
+  --surface-2: #2c2e33;
+  --surface-3: #3b3d42;
+
+  --text-1: #ffffff;
+  --text-2: #e5e7eb;
+  --text-3: #9ca3af;
+
+  --border-1: #383a40;
+  --border-2: #4b4d55;
+  --border-3: #6b6d76;
+}

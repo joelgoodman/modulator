@@ -1,0 +1,30 @@
+{
+  "name": "modulator",
+  "private": true,
+  "version": "0.0.1",
+  "description": "Modulator - An extensible block editor system",
+  "type": "module",
+  "scripts": {
+    "build": "tsc --build",
+    "dev": "tsc --build --watch",
+    "clean": "tsc --build --clean && rm -rf packages/*/dist",
+    "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\"",
+    "lint": "eslint . --ext .ts,.tsx,.js,.jsx",
+    "lint:fix": "eslint . --ext .ts,.tsx,.js,.jsx --fix"
+  },
+  "devDependencies": {
+    "@types/node": "^22.9.0",
+    "@typescript-eslint/eslint-plugin": "^6.4.0",
+    "@typescript-eslint/parser": "^6.4.0",
+    "eslint": "^9.15.0",
+    "eslint-config-prettier": "^9.0.0",
+    "prettier": "^3.0.2",
+    "typescript": "^5.0.0",
+    "yaml": "^2.6.0"
+  },
+  "engines": {
+    "node": ">=18",
+    "pnpm": ">=9.13.2"
+  },
+  "packageManager": "pnpm@9.13.2"
+}

@@ -1,0 +1,34 @@
+/* Base styles and tokens */
+@import './utils/reset.css';
+@import './tokens.css';
+
+/* Component styles */
+@import './components/block.css';
+@import './components/toolbar.css';
+
+/* Theme styles */
+@import './themes/light.css';
+@import './themes/dark.css';
+
+/* Utility styles */
+@import './utils/animations.css';
+
+/* Editor container */
+.modulator-editor {
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+  background: var(--editor-bg);
+  color: var(--text-1);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Container for blocks */
+.modulator-content {
+  width: 100%;
+  max-width: 768px;
+  margin: 0 auto;
+  padding: var(--space-4);
+}

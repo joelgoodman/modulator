@@ -1,0 +1,18 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "composite": true,
+    "rootDir": ".",
+    "outDir": "../dist/tests",
+    "types": ["node", "vitest/globals"],
+    "paths": {
+      "@modulator/types": ["../../types/src"],
+      "@modulator/types/*": ["../../types/src/*"],
+      "@modulator/core": ["../src"],
+      "@modulator/core/*": ["../src/*"]
+    }
+  },
+  "include": ["./**/*.ts"],
+  "exclude": ["../dist", "node_modules"],
+  "references": [{ "path": "../../types" }, { "path": "../src" }]
+}

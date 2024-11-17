@@ -1,0 +1,17 @@
+theme:
+  default: light
+  persist: true
+plugins:
+  enabled:
+sanitization:
+  allowedTags:
+    - b
+    - i
+    - u
+    - a
+  stripScripts: true
+blockTypes:
+  custom:
+    - text
+    - heading
+    - list

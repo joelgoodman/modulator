@@ -1,0 +1,64 @@
+{
+  "theme": {
+    "default": "light",
+    "persist": true
+  },
+  "sanitization": {
+    "allowedTags": ["strong", "em", "u", "a"],
+    "stripScripts": true
+  },
+  "blockTypes": {
+    "custom": ["text", "heading", "list"]
+  },
+  "toolbar": {
+    "defaultGroups": {
+      "format": {
+        "label": "Text Formatting",
+        "priority": 10,
+        "enabled": true
+      },
+      "advanced": {
+        "label": "Advanced Formatting",
+        "priority": 20,
+        "enabled": true
+      }
+    },
+    "defaultItems": {
+      "bold": {
+        "group": "format",
+        "label": "Bold",
+        "shortcut": "⌘B",
+        "enabled": true
+      },
+      "italic": {
+        "group": "format",
+        "label": "Italic",
+        "shortcut": "⌘I",
+        "enabled": true
+      },
+      "underline": {
+        "group": "format",
+        "label": "Underline",
+        "shortcut": "⌘U",
+        "enabled": true
+      },
+      "strike": {
+        "group": "advanced",
+        "label": "Strike",
+        "enabled": true
+      },
+      "code": {
+        "group": "advanced",
+        "label": "Code",
+        "enabled": true
+      },
+      "link": {
+        "group": "advanced",
+        "label": "Link",
+        "enabled": true
+      }
+    },
+    "customGroups": {},
+    "customItems": {}
+  }
+}

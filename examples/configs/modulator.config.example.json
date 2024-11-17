@@ -1,0 +1,13 @@
+{
+  "theme": {
+    "default": "light",
+    "persist": true
+  },
+  "sanitization": {
+    "allowedTags": ["b", "i", "u", "a"],
+    "stripScripts": true
+  },
+  "blockTypes": {
+    "custom": ["text", "heading", "list"]
+  }
+}

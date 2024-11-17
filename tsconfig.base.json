@@ -1,0 +1,38 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "composite": true,
+    "noImplicitAny": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "allowJs": true,
+    "resolveJsonModule": true,
+    "isolatedModules": false,
+    "preserveSymlinks": true,
+    "baseUrl": ".",
+    "paths": {
+      "@modulator/core": ["packages/core/src"],
+      "@modulator/core/*": ["packages/core/src/*"],
+      "@modulator/blocks": ["packages/blocks/src"],
+      "@modulator/blocks/*": ["packages/blocks/src/*"],
+      "@modulator/ui": ["packages/ui/src"],
+      "@modulator/ui/*": ["packages/ui/src/*"],
+      "@modulator/utils": ["packages/utils/src"],
+      "@modulator/utils/*": ["packages/utils/src/*"],
+      "@modulator/types": ["packages/types/src"],
+      "@modulator/types/*": ["packages/types/src/*"]
+    },
+    "types": ["node"]
+  }
+}

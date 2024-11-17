@@ -1,0 +1,25 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "rootDir": ".",
+    "composite": true,
+    "declaration": true,
+    "declarationMap": true,
+    "types": ["node", "vitest/globals"],
+    "moduleResolution": "NodeNext",
+    "module": "NodeNext",
+    "paths": {
+      "@modulator/types": ["../types/src"],
+      "@modulator/types/*": ["../types/src/*"],
+      "@modulator/core": ["./src"],
+      "@modulator/core/*": ["./src/*"]
+    }
+  },
+  "references": [{ "path": "../types" }],
+  "include": ["src/**/*", "tests/**/*"],
+  "exclude": ["dist", "node_modules"],
+  "ts-node": {
+    "transpileOnly": true
+  }
+}
