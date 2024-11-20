@@ -1,5 +1,6 @@
 import { Block } from '../blocks/index.js';
-import { BlockData, EditorState, StateManager as IStateManager } from '@modulator/types';
+import { BlockData, EditorState } from '@modulator/types';
+import type { StateManager as IStateManager } from '@modulator/types';
 import { EventEmitter } from '../events/index.js';
 
 /**

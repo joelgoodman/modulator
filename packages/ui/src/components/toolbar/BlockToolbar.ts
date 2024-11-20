@@ -6,37 +6,26 @@ import {
   ToolbarConfig,
   ToolbarContext,
   ToolbarPosition,
-  ToolbarPluginContext,
-  StateManager,
-  BlockInteractionManager,
-  BaseRenderer,
+  ToolbarState,
   ToolbarOptions,
-  EditorState,
+  ToolbarEventType,
+  StateManager,
+  BaseRenderer,
 } from '@modulator/types';
+
 import { EventEmitter } from '@modulator/core';
+import { BlockInteractionManager } from '@modulator/core';
+
 import { ToolbarRegistry } from './ToolbarRegistry.js';
 import { ToolbarButton, ButtonProps } from './ToolbarButton.js';
 import styles from '../../styles/components/toolbar.module.css';
 
-interface ToolbarState {
-  isVisible: boolean;
-  activeGroups: Set<string>;
-  activeItems: Set<string>;
-  disabledItems: Set<string>;
-  hiddenItems: Set<string>;
-}
-
-interface FormattableBlockData extends BlockData {
-  format?: Record<string, boolean>;
-  metadata?: Record<string, unknown>;
-}
-
 /**
  * Block-specific toolbar implementation
  */
-export class BlockToolbar implements ToolbarPluginContext {
+export class BlockToolbar {
   readonly eventEmitter: EventEmitter;
-  readonly stateManager: StateManager<FormattableBlockData>;
+  readonly stateManager: StateManager<BlockData>;
   readonly interactionManager: BlockInteractionManager;
   readonly renderer: BaseRenderer;
 
@@ -45,12 +34,12 @@ export class BlockToolbar implements ToolbarPluginContext {
   private activeBlockType: string | undefined;
   private element: HTMLElement;
   private buttons: Map<string, ToolbarButton>;
-  private position: ToolbarPosition;
+  private position: { type: string; anchor: string };
   private context: ToolbarContext;
   private options: ToolbarOptions;
 
   constructor(
-    stateManager: StateManager<FormattableBlockData>,
+    stateManager: StateManager<BlockData>,
     interactionManager: BlockInteractionManager,
     renderer: BaseRenderer,
     options: ToolbarOptions = {}
@@ -61,18 +50,22 @@ export class BlockToolbar implements ToolbarPluginContext {
     this.renderer = renderer;
     this.options = options;
 
-    this.registry = new ToolbarRegistry({
-      defaultGroups: options.defaultGroups || {},
-      defaultItems: options.defaultItems || {},
-      customGroups: options.customGroups || {},
-      customItems: options.customItems || {},
-    });
+    // Create an empty toolbar registry configuration
+    const registryConfig: ToolbarConfig = {};
+
+    this.registry = new ToolbarRegistry(registryConfig);
 
     this.buttons = new Map();
-    this.position = options.position || { type: 'floating', anchor: 'top' };
+
+    // Explicitly type the position configuration
+    this.position = {
+      type: options.position?.type ?? ('floating' as const),
+      anchor: options.position?.anchor ?? ('top' as const),
+    };
+
     this.element = this.createToolbarElement();
 
-    // Initialize context with required properties
+    // Create a minimal context object that matches ToolbarContext interface
     this.context = {
       eventEmitter: this.eventEmitter,
       stateManager: this.stateManager,
@@ -111,7 +104,7 @@ export class BlockToolbar implements ToolbarPluginContext {
   /**
    * Set toolbar position
    */
-  setPosition(position: ToolbarPosition): void {
+  setPosition(position: { type: string; anchor: string }): void {
     this.position = position;
     this.validateState();
     this.updatePosition();
@@ -305,7 +298,7 @@ export class BlockToolbar implements ToolbarPluginContext {
     });
   }
 
-  private handleStateChanged(state: EditorState<FormattableBlockData>): void {
+  private handleStateChanged(state: any): void {
     // Update context with new state
     const selectedBlock = state.selectedBlock
       ? this.stateManager.getBlock(state.selectedBlock)
@@ -323,7 +316,7 @@ export class BlockToolbar implements ToolbarPluginContext {
   private handleBlockSelected(event: BlockEvent): void {
     if (!event.data?.blockData) return;
 
-    const blockData = event.data.blockData as FormattableBlockData;
+    const blockData = event.data.blockData as BlockData;
     this.activeBlockId = event.blockId;
     this.activeBlockType = blockData.type;
     this.updateContext();
@@ -396,7 +389,7 @@ export class BlockToolbar implements ToolbarPluginContext {
       const groupElement = document.createElement('div');
       groupElement.className = styles['modulator-toolbar-group'];
       groupElement.setAttribute('role', 'group');
-      groupElement.setAttribute('aria-label', group.label);
+      groupElement.setAttribute('aria-label', group.name);
 
       if (this.options.accessibility?.ariaLabels?.groups?.[group.id]) {
         groupElement.setAttribute(
@@ -637,7 +630,7 @@ export class BlockToolbar implements ToolbarPluginContext {
 
   private emitEvent(type: string, blockId: string = '', data: Record<string, unknown> = {}): void {
     this.eventEmitter.emit({
-      type,
+      type: type as ToolbarEventType,
       blockId,
       data,
     });

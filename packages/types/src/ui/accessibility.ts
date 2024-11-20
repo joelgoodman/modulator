@@ -1,22 +1,19 @@
 /**
  * WCAG Accessibility Compliance Levels
- * @see https://www.w3.org/WAI/WCAG21/quickref/
  */
 export enum AccessibilityLevel {
   /**
-   * WCAG Level A - Minimal accessibility requirements
+   * Lowest level of accessibility compliance
    */
   A = 'A',
 
   /**
-   * WCAG Level AA - Enhanced accessibility requirements
-   * Common target for most applications
+   * Intermediate level of accessibility compliance
    */
   AA = 'AA',
 
   /**
-   * WCAG Level AAA - Maximum accessibility requirements
-   * Highest level of accessibility support
+   * Highest level of accessibility compliance
    */
   AAA = 'AAA',
 }
@@ -31,32 +28,21 @@ export interface LocaleConfig {
   language: string;
 
   /**
-   * Translation key-value pairs
-   */
-  translations: Record<string, string>;
-
-  /**
    * Text direction
    */
   direction?: 'ltr' | 'rtl';
 
   /**
-   * Locale-specific formatting options
+   * Translation key-value pairs
+   */
+  translations: Record<string, string>;
+
+  /**
+   * Locale-specific formatting
    */
   formatting?: {
-    /**
-     * Date format
-     */
     dateFormat?: string;
-
-    /**
-     * Time format
-     */
     timeFormat?: string;
-
-    /**
-     * Number format
-     */
     numberFormat?: string;
   };
 }
@@ -72,37 +58,31 @@ export interface AccessibilityConfig {
 
   /**
    * Enable keyboard navigation
-   * Required for WCAG 2.1 Level A (2.1.1)
    */
   keyboardNavigation: boolean;
 
   /**
    * Enable screen reader support
-   * Required for WCAG 2.1 Level A (1.3.1)
    */
   screenReader: boolean;
 
   /**
    * Enable high contrast mode
-   * Required for WCAG 2.1 Level AAA (1.4.6)
    */
   highContrast: boolean;
 
   /**
    * Current locale
-   * Required for WCAG 2.1 Level A (3.1.1)
    */
   locale: string;
 
   /**
-   * Text resize support
-   * Required for WCAG 2.1 Level AA (1.4.4)
+   * Enable text resizing
    */
   textResize: boolean;
 
   /**
-   * Focus indicators
-   * Required for WCAG 2.1 Level AA (2.4.7)
+   * Enable focus indicators
    */
   focusIndicators: boolean;
 }
@@ -122,7 +102,7 @@ export interface Translator {
   setLocale(locale: string): void;
 
   /**
-   * Add translations for a locale
+   * Add translations
    */
   addTranslations(locale: string, translations: Record<string, string>): void;
 }
@@ -139,7 +119,7 @@ export interface AccessibilityContext {
   /**
    * Translation function
    */
-  translate: (key: string, params?: Record<string, string>) => string;
+  translate(key: string, params?: Record<string, string>): string;
 
   /**
    * Current locale
@@ -149,10 +129,10 @@ export interface AccessibilityContext {
   /**
    * Update configuration
    */
-  updateConfig: (config: Partial<AccessibilityConfig>) => void;
+  updateConfig(config: Partial<AccessibilityConfig>): void;
 
   /**
-   * Change locale
+   * Set current locale
    */
-  setLocale: (locale: string) => void;
+  setLocale(locale: string): void;
 }

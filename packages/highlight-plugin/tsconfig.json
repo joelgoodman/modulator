@@ -1,0 +1,20 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "dist",
+    "rootDir": "src",
+    "baseUrl": ".",
+    "paths": {
+      "@modulator/types": ["../types/src"],
+      "@modulator/types/*": ["../types/src/*"],
+      "@modulator/core": ["../core/src"]
+    },
+    "composite": true,
+    "declaration": true,
+    "declarationMap": true,
+    "types": ["node"]
+  },
+  "include": ["src/**/*.ts"],
+  "exclude": ["**/*.test.ts", "**/*.spec.ts", "dist"],
+  "references": [{ "path": "../types" }, { "path": "../core" }]
+}

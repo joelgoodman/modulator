@@ -1,28 +1,6 @@
-import { BlockData, BlockConfig, Position } from './blocks.js';
-import { BlockEvent, BlockEventType } from './event.js';
-
-/**
- * Block registry event types
- */
-export type BlockRegistryEventType = BlockEventType;
-
-/**
- * Block registry event data
- */
-export interface BlockRegistryEventData<T extends BlockData = BlockData> {
-  blockId: string;
-  blockType?: string;
-  blockData?: T;
-  position?: Position;
-}
-
-/**
- * Block registry event
- */
-export interface BlockRegistryEvent<T extends BlockData = BlockData> {
-  type: BlockRegistryEventType;
-  data: BlockRegistryEventData<T>;
-}
+import type { BlockData } from '../blocks/types.js';
+import type { BlockConfig } from '../blocks/renderer.js';
+import type { BlockEventType } from './event.js';
 
 /**
  * Block registry options
@@ -45,92 +23,82 @@ export interface BlockRegistryOptions {
 }
 
 /**
+ * Block registry event data
+ */
+export interface BlockRegistryEventData<T extends BlockData = BlockData> {
+  /**
+   * Block ID
+   */
+  blockId: string;
+
+  /**
+   * Block type
+   */
+  blockType?: string;
+
+  /**
+   * Block data
+   */
+  blockData?: T;
+}
+
+/**
  * Block registry interface
  * Manages block instances and their lifecycle
  */
 export interface BlockRegistry<T extends BlockData = BlockData> {
   /**
-   * Get a block by ID
+   * Register block type
    */
-  get(id: string): T | undefined;
+  registerType(type: string, config: BlockConfig<T>): void;
 
   /**
-   * Get all blocks
+   * Unregister block type
    */
-  getAll(): T[];
+  unregisterType(type: string): void;
 
   /**
-   * Create a new block
+   * Get block type
    */
-  create(config: BlockConfig<T>): T;
+  getType(type: string): BlockConfig<T> | undefined;
 
   /**
-   * Update a block
+   * Get all registered block types
    */
-  update(id: string, data: Partial<T>): void;
+  getTypes(): BlockConfig<T>[];
 
   /**
-   * Delete a block
+   * Check if block type is registered
    */
-  delete(id: string): void;
+  hasType(type: string): boolean;
 
   /**
-   * Move a block to a new position
+   * Create block data
    */
-  move(id: string, position: Position): void;
+  createBlockData(type: string, data?: Partial<T>): T;
 
   /**
-   * Get the selected block ID
+   * Validate block data
    */
-  getSelected(): string | null;
+  validateBlockData(type: string, data: T): boolean;
 
   /**
-   * Select a block
+   * Transform block data
    */
-  select(id: string): void;
-
-  /**
-   * Deselect the current block
-   */
-  deselect(): void;
-
-  /**
-   * Subscribe to block events
-   */
-  on(blockId: string, event: string, handler: (event: BlockEvent) => void): void;
-
-  /**
-   * Unsubscribe from block events
-   */
-  off(blockId: string, event: string, handler: (event: BlockEvent) => void): void;
+  transformBlockData(type: string, data: T): BlockData;
 
   /**
    * Subscribe to registry events
    */
-  subscribe(handler: (event: BlockRegistryEvent<T>) => void): () => void;
+  on(type: BlockEventType, handler: (data: BlockRegistryEventData<T>) => void): void;
 
   /**
-   * Clear the registry
+   * Unsubscribe from registry events
+   */
+  off(type: BlockEventType, handler: (data: BlockRegistryEventData<T>) => void): void;
+
+  /**
+   * Clear registry
    */
   clear(): void;
-
-  /**
-   * Undo the last operation
-   */
-  undo(): void;
-
-  /**
-   * Redo the last undone operation
-   */
-  redo(): void;
-
-  /**
-   * Check if undo is available
-   */
-  canUndo(): boolean;
-
-  /**
-   * Check if redo is available
-   */
-  canRedo(): boolean;
 }

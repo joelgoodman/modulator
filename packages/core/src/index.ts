@@ -14,7 +14,7 @@ export { BaseRenderer, DefaultRenderer } from './rendering/renderer.js';
 
 // Features
 export { AccessibilityManager } from './accessibility/AccessibilityManager.js';
-export { PerformanceManager } from './performance/PerformanceManager.js';
+export { PerformanceManager } from './performance/index.js';
 export { SecurityManager } from './security/SecurityManager.js';
 export { BlockInteractionManager } from './interactions/BlockInteractions.js';
 
@@ -39,7 +39,6 @@ export type {
   ToolbarItem,
   ToolbarGroup,
   ToolbarPlugin,
-  ToolbarPluginContext,
   SanitizationConfig,
   ValidationResult,
   ValidationOptions,

@@ -2,7 +2,9 @@
 import '@modulator/ui/styles/index.css';
 
 // Theme management
-export { getTheme, setTheme } from './theme.js';
+import { getTheme, setTheme, toggleTheme, registry } from './themes/index.js';
+export type { Theme, ThemeConfig, ThemeOverrides, ThemeRegistry } from '@modulator/types';
+export { getTheme, setTheme, toggleTheme, registry as themeRegistry };
 
 export function initializeTheme(): void {
   const theme = getTheme();
@@ -11,34 +13,6 @@ export function initializeTheme(): void {
 
 // Export components
 export * from './adapters/index.js';
-export * from './components/toolbar/index.js';
+export { BlockToolbar } from './components/toolbar/BlockToolbar.js';
+export { TextFormatToolbar, ToolbarButton, ToolbarRegistry } from './components/toolbar/index.js';
 export * from './components/icons/index.js';
-
-// Re-export types from @modulator/types
-export type {
-  // Core types
-  BlockData,
-  BlockType,
-  BlockConfig,
-  BlockValidationResult,
-  BlockRegistryContext,
-
-  // Toolbar types
-  ToolbarItem,
-  ToolbarGroup,
-  ToolbarConfig,
-  ToolbarState,
-  ToolbarContext,
-  ToolbarPluginContext,
-  ToolbarRegistryContext,
-  ToolbarButtonContext,
-  ToolbarButtonProps,
-  ToolbarButtonState,
-
-  // Component interfaces
-  BlockRegistryAdapter,
-  BlockToolbar,
-  TextFormatToolbar,
-  ToolbarButton,
-  ToolbarRegistry,
-} from '@modulator/types';

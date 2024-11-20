@@ -1,11 +1,10 @@
-import { BlockData } from './blocks.js';
-import { ModulatorConfig } from './config.js';
-import { Selection } from './selection.js';
+import type { BlockData } from '../blocks/index.js';
+import type { ModulatorConfig } from '../ui/config.js';
 
 /**
  * Editor options extending core configuration
  */
-export interface EditorOptions<T extends BlockData> extends ModulatorConfig {
+export interface EditorOptions<T extends BlockData = BlockData> extends ModulatorConfig {
   /**
    * Container element to render the editor
    */
@@ -31,9 +30,9 @@ export interface EditorOptions<T extends BlockData> extends ModulatorConfig {
     selectedBlock?: string;
 
     /**
-     * Current text selection
+     * Current selection range
      */
-    selection?: Selection | null;
+    selection?: Range | null;
   };
 
   /**

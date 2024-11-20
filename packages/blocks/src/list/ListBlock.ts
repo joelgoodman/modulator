@@ -1,4 +1,5 @@
-import type { BlockType, BlockData } from '@modulator/core';
+import type { BlockType, BlockData } from '@modulator/types';
+import crypto from 'crypto';
 
 export type ListType = 'bullet' | 'number';
 
@@ -9,7 +10,6 @@ export interface ListItemData {
 
 export interface ListBlockData extends BlockData {
   items: ListItemData[];
-  type: ListType;
 }
 
 export const ListBlock: BlockType<ListBlockData> = {
@@ -17,8 +17,9 @@ export const ListBlock: BlockType<ListBlockData> = {
   name: 'List Block',
 
   create: (data?: Partial<ListBlockData>): ListBlockData => ({
+    id: crypto.randomUUID(),
+    type: 'list',
     items: data?.items ?? [{ content: '' }],
-    type: data?.type ?? 'bullet',
   }),
 
   validate: (data: ListBlockData): boolean => {
@@ -28,16 +29,17 @@ export const ListBlock: BlockType<ListBlockData> = {
         item =>
           typeof item.content === 'string' &&
           (item.checked === undefined || typeof item.checked === 'boolean')
-      ) &&
-      (data.type === 'bullet' || data.type === 'number')
+      )
     );
   },
 
-  transform: (data: ListBlockData): ListBlockData => ({
-    items: data.items.map(item => ({
-      content: item.content.trim(),
-      ...(item.checked !== undefined ? { checked: item.checked } : {}),
-    })),
-    type: data.type,
-  }),
+  transform: (data: ListBlockData): ListBlockData => {
+    return {
+      ...data,
+      items: data.items.map(item => ({
+        content: String(item.content),
+        checked: item.checked === true,
+      })),
+    };
+  },
 };

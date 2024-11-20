@@ -1,310 +1,194 @@
-import { BlockEvent } from './event.js';
+import type { BlockEvent } from '../core/index.js';
+import type { BlockData, Position } from './types.js';
+import type { BlockConfig } from './renderer.js';
 
 /**
- * Block interface
+ * Block interface representing a single block in the system
  */
 export interface Block<T extends BlockData = BlockData> {
   /**
-   * Block ID
+   * Unique identifier for the block
    */
   readonly id: string;
 
   /**
-   * Block type
+   * Type of the block
    */
   readonly type: string;
 
   /**
-   * Block data
+   * Data associated with the block
    */
   readonly data: T;
 
   /**
-   * Update block data
-   */
-  update(data: Partial<T>): void;
-
-  /**
    * Subscribe to block events
+   * @param event Event name to listen for
+   * @param handler Callback function for the event
    */
   on(event: string, handler: (event: BlockEvent) => void): void;
 
   /**
    * Unsubscribe from block events
+   * @param event Event name to stop listening
+   * @param handler Callback function to remove
    */
   off(event: string, handler: (event: BlockEvent) => void): void;
 }
 
 /**
- * Base block data interface
- */
-export interface BlockData {
-  [key: string]: unknown;
-  id: string;
-  type: string;
-}
-
-/**
- * Block configuration
- */
-export interface BlockConfig<T extends BlockData = BlockData> {
-  /**
-   * Unique block identifier
-   */
-  id: string;
-
-  /**
-   * Block type (e.g., 'text', 'heading')
-   */
-  type: string;
-
-  /**
-   * Block data
-   */
-  data: T;
-
-  /**
-   * Child block IDs
-   */
-  children?: string[];
-}
-
-/**
- * Block type definition
+ * Block type definition for creating and managing blocks
  */
 export interface BlockType<T extends BlockData = BlockData> {
   /**
-   * Block type identifier
+   * Unique identifier for the block type
    */
   type: string;
 
   /**
-   * Display name
+   * Human-readable name for the block type
    */
   name: string;
 
   /**
-   * Create a new block instance
+   * Create initial block data
+   * @param data Optional partial data to initialize the block
+   * @returns Fully formed block data
    */
-  create: (data?: Partial<T>) => T;
+  create(data?: Partial<T>): T;
 
   /**
    * Validate block data
+   * @param data Block data to validate
+   * @returns Boolean indicating if the data is valid
    */
-  validate?: (data: T) => boolean;
+  validate(data: T): boolean;
 
   /**
-   * Transform block data before saving
+   * Transform block data
+   * @param data Block data to transform
+   * @returns Transformed block data
    */
-  transform?: (data: T) => BlockData;
+  transform(data: T): BlockData;
 }
 
 /**
- * Block operation type
+ * Enumeration of possible block operation types
  */
-export type BlockOperationType = 'create' | 'update' | 'delete' | 'move';
+export enum BlockOperationType {
+  CREATE = 'create',
+  UPDATE = 'update',
+  DELETE = 'delete',
+  MOVE = 'move',
+  DUPLICATE = 'duplicate',
+  TRANSFORM = 'transform',
+}
 
 /**
- * Block operation
+ * Represents a block operation
  */
 export interface BlockOperation<T extends BlockData = BlockData> {
   /**
-   * Operation type
+   * Type of block operation
    */
   type: BlockOperationType;
 
   /**
-   * Target block ID
+   * Unique identifier of the block being operated on
    */
   blockId: string;
 
   /**
-   * Block data for create/update operations
+   * Optional data associated with the operation
    */
   data?: T;
 
   /**
-   * Target position for create/move operations
+   * Optional position for move or create operations
    */
   position?: Position;
 }
 
 /**
- * Position in the document
- */
-export interface Position {
-  /**
-   * Index in the parent container
-   */
-  index: number;
-
-  /**
-   * Parent block ID
-   */
-  parent?: string;
-}
-
-/**
- * Block rendering options
- */
-export interface BlockRenderOptions {
-  /**
-   * Whether the block is editable
-   */
-  editable?: boolean;
-
-  /**
-   * Custom CSS classes
-   */
-  className?: string;
-
-  /**
-   * Block-specific styles
-   */
-  style?: Partial<CSSStyleDeclaration>;
-
-  /**
-   * Additional attributes
-   */
-  attributes?: Record<string, string>;
-}
-
-/**
- * Block selection state
- */
-export interface BlockSelection {
-  /**
-   * Selected block ID
-   */
-  blockId: string;
-
-  /**
-   * Selection range
-   */
-  range?: Range;
-
-  /**
-   * Whether the block is focused
-   */
-  focused: boolean;
-}
-
-/**
- * Block interaction manager interface
- */
-export interface BlockInteractionManager {
-  /**
-   * Get current selection
-   */
-  getSelection(): BlockSelection | null;
-
-  /**
-   * Set selection
-   */
-  setSelection(selection: BlockSelection | null): void;
-
-  /**
-   * Focus block
-   */
-  focusBlock(blockId: string, options?: { select?: boolean }): void;
-
-  /**
-   * Blur block
-   */
-  blurBlock(blockId: string): void;
-
-  /**
-   * Select block
-   */
-  selectBlock(blockId: string): void;
-
-  /**
-   * Deselect block
-   */
-  deselectBlock(blockId: string): void;
-
-  /**
-   * Handle block click
-   */
-  handleClick(blockId: string, event: MouseEvent): void;
-
-  /**
-   * Handle block keydown
-   */
-  handleKeyDown(blockId: string, event: KeyboardEvent): void;
-
-  /**
-   * Handle block paste
-   */
-  handlePaste(blockId: string, event: ClipboardEvent): void;
-
-  /**
-   * Handle block drop
-   */
-  handleDrop(blockId: string, event: DragEvent): void;
-}
-
-/**
- * Block validation result
+ * Result of block data validation
  */
 export interface BlockValidationResult {
   /**
-   * Whether the block is valid
+   * Indicates whether the validation was successful
    */
   valid: boolean;
 
   /**
-   * Validation error messages
+   * List of validation errors, if any
    */
   errors?: string[];
 }
 
 /**
- * Block manager context
+ * Context for managing blocks within the system
  */
 export interface BlockManagerContext<T extends BlockData = BlockData> {
   /**
-   * Get block by ID
+   * Retrieve a specific block by its ID
+   * @param id Block identifier
+   * @returns The block, or undefined if not found
    */
   getBlock(id: string): Block<T> | undefined;
 
   /**
-   * Get all blocks
+   * Get all blocks in the system
+   * @returns Array of all blocks
    */
   getBlocks(): Block<T>[];
 
   /**
    * Create a new block
+   * @param config Configuration for creating the block
+   * @returns The newly created block
    */
   createBlock(config: BlockConfig<T>): Block<T>;
 
   /**
-   * Update block data
+   * Update an existing block
+   * @param id Block identifier
+   * @param data Partial data to update
    */
   updateBlock(id: string, data: Partial<T>): void;
 
   /**
-   * Delete block
+   * Delete a block
+   * @param id Block identifier to delete
    */
   deleteBlock(id: string): void;
 
   /**
-   * Move block to a new position
+   * Move a block to a new position
+   * @param id Block identifier
+   * @param position New position for the block
    */
   moveBlock(id: string, position: Position): void;
 
   /**
-   * Validate block data
+   * Validate a block's data
+   * @param type Block type
+   * @param data Block data to validate
+   * @returns Validation result
    */
   validateBlock(type: string, data: T): BlockValidationResult;
 
   /**
-   * Get selected block ID
+   * Get the currently selected block
+   * @returns Block ID of selected block, or null
    */
   getSelectedBlock(): string | null;
 
   /**
-   * Select block
+   * Select a block
+   * @param id Block ID to select, or null to deselect
    */
   selectBlock(id: string | null): void;
 }
+
+export type { BlockEvent } from '../core/event.js';
+export type { BlockData, Position } from './types.js';
+export type { BlockConfig } from './renderer.js';

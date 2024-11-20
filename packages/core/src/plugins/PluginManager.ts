@@ -14,8 +14,9 @@ import {
   PluginRequestHandler,
   PluginMessaging,
   BlockData,
+  PluginHealth,
+  EventEmitter,
 } from '@modulator/types';
-import { EventEmitter } from '../events/EventEmitter.js';
 import { MessagingManager } from './messaging/index.js';
 
 /**
@@ -80,41 +81,9 @@ interface StateMigration<T extends PluginStateData = PluginStateData> {
 }
 
 /**
- * Plugin health status
- */
-export interface PluginHealth {
-  state: PluginState;
-  status: 'healthy' | 'degraded' | 'unhealthy';
-  errorCount: number;
-  uptime: number;
-  startTime: number;
-  dependencies: {
-    id: string;
-    state: PluginState;
-    status: 'healthy' | 'degraded' | 'unhealthy';
-  }[];
-  lastError?: Error;
-  lastErrorTime?: number;
-  memoryUsage?: number;
-  id: string;
-}
-
-/**
  * Plugin health status internal
  */
-interface PluginHealthStatus {
-  state: PluginState;
-  status: 'healthy' | 'degraded' | 'unhealthy';
-  errorCount: number;
-  uptime: number;
-  startTime: number;
-  dependencies: {
-    id: string;
-    state: PluginState;
-    status: 'healthy' | 'degraded' | 'unhealthy';
-  }[];
-  lastError?: Error;
-  lastErrorTime?: number;
+interface PluginHealthStatus extends PluginHealth {
   memoryUsage?: number;
 }
 

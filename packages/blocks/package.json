@@ -17,10 +17,13 @@
     "dist"
   ],
   "scripts": {
-    "clean": "rm -rf dist"
+    "clean": "rm -rf dist",
+    "build": "tsc --build",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@modulator/core": "workspace:*",
+    "@modulator/types": "workspace:*",
     "@modulator/ui": "workspace:*"
   },
   "devDependencies": {

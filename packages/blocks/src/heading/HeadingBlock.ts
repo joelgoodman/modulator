@@ -1,4 +1,5 @@
-import type { BlockType, BlockData } from '@modulator/core';
+import type { BlockType, BlockData } from '@modulator/types';
+import crypto from 'crypto';
 
 export type HeadingLevel = 1 | 2 | 3 | 4 | 5 | 6;
 
@@ -12,6 +13,8 @@ export const HeadingBlock: BlockType<HeadingBlockData> = {
   name: 'Heading Block',
 
   create: (data?: Partial<HeadingBlockData>): HeadingBlockData => ({
+    id: crypto.randomUUID(),
+    type: 'heading',
     content: data?.content ?? '',
     level: data?.level ?? 1,
   }),
@@ -26,6 +29,7 @@ export const HeadingBlock: BlockType<HeadingBlockData> = {
   },
 
   transform: (data: HeadingBlockData): HeadingBlockData => ({
+    ...data,
     content: data.content.trim(),
     level: data.level,
   }),

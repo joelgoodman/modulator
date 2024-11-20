@@ -1,0 +1,23 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Modulator Toolbar Test</title>
+    <link rel="stylesheet" href="/path/to/toolbar.css" />
+  </head>
+  <body>
+    <div id="editor-container"></div>
+    <script type="module">
+      import { BlockToolbar } from '@modulator/ui';
+
+      const toolbar = new BlockToolbar({
+        // Test configuration
+        defaultItems: {
+          bold: { label: 'Bold', icon: '🅱️', shortcut: 'Ctrl+B' },
+          italic: { label: 'Italic', icon: '𝐼', shortcut: 'Ctrl+I' },
+        },
+      });
+
+      document.getElementById('editor-container').appendChild(toolbar.element);
+    </script>
+  </body>
+</html>

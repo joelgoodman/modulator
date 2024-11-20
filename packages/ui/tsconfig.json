@@ -1,14 +1,32 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
+    "target": "es2022",
+    "module": "esnext",
+    "lib": ["es2022", "dom"],
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "react-jsx",
     "outDir": "dist",
     "rootDir": "src",
     "composite": true,
     "declaration": true,
     "declarationMap": true,
+    "baseUrl": ".",
+    "paths": {
+      "@modulator/core": ["../core/src"],
+      "@modulator/types": ["../types/src"],
+      "@modulator/ui/*": ["./src/*"]
+    },
     "types": ["node"]
   },
-  "include": ["src/**/*"],
-  "exclude": ["**/*.test.ts", "**/*.spec.ts", "dist"],
-  "references": [{ "path": "../core" }]
+  "include": ["src/**/*.ts", "src/**/*.tsx"],
+  "exclude": ["node_modules", "**/*.test.ts", "**/*.spec.ts", "dist"],
+  "references": [{ "path": "../core" }, { "path": "../types" }]
 }

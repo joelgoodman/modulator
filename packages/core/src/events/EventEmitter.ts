@@ -71,6 +71,13 @@ export class EventEmitter {
   }
 
   /**
+   * Remove all event listeners
+   */
+  removeAllListeners(): void {
+    this.handlers.clear();
+  }
+
+  /**
    * Emit event
    */
   emit<T = BlockEvent>(event: T): void {

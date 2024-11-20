@@ -1,99 +1,78 @@
+import type { Theme } from './themes.js';
+import type { PerformanceConfig } from '../performance/config.js';
+
 /**
  * Theme options
  */
-export type Theme = 'light' | 'dark';
+
+/**
+ * Block configuration
+ */
+export interface BlockTypeConfig {
+  /**
+   * Custom block types
+   */
+  custom?: string[];
+
+  /**
+   * Block type options
+   */
+  options?: Record<string, unknown>;
+
+  /**
+   * Block validation rules
+   */
+  validation?: {
+    required?: boolean;
+    maxLength?: number;
+    minLength?: number;
+    pattern?: string;
+    customRules?: Record<string, (content: unknown) => boolean>;
+  };
+}
+
+/**
+ * Security configuration
+ */
+export interface SecurityConfig {
+  /**
+   * Content sanitization
+   */
+  sanitization?: {
+    allowedTags?: string[];
+    allowedAttributes?: Record<string, string[]>;
+    allowedSchemes?: string[];
+  };
+
+  /**
+   * Content validation
+   */
+  validation?: {
+    maxSize?: number;
+    allowedTypes?: string[];
+    customRules?: Record<string, (content: unknown) => boolean>;
+  };
+}
 
 /**
  * Core editor configuration
  */
 export interface ModulatorConfig {
-  /**
-   * Editor theme
-   */
+  /** Theme setting */
   theme?: Theme;
 
-  /**
-   * Enable debugging features
-   */
+  /** Enable debug mode */
   debug?: boolean;
 
-  /**
-   * Plugin configurations
-   */
+  /** Plugin configurations */
   plugins?: Record<string, unknown>;
 
-  /**
-   * Block type configurations
-   */
-  blocks?: {
-    /**
-     * Custom block types to register
-     */
-    custom?: string[];
+  /** Block type configurations */
+  blocks?: BlockTypeConfig;
 
-    /**
-     * Block type specific configurations
-     */
-    config?: Record<string, unknown>;
-  };
+  /** Security settings */
+  security?: SecurityConfig;
 
-  /**
-   * Security configurations
-   */
-  security?: {
-    /**
-     * Content sanitization options
-     */
-    sanitization?: {
-      /**
-       * Allowed HTML tags
-       */
-      allowedTags?: string[];
-
-      /**
-       * Strip script tags
-       */
-      stripScripts?: boolean;
-    };
-  };
-
-  /**
-   * Accessibility configurations
-   */
-  accessibility?: {
-    /**
-     * Enable screen reader support
-     */
-    screenReader?: boolean;
-
-    /**
-     * Enable keyboard navigation
-     */
-    keyboardNavigation?: boolean;
-
-    /**
-     * Default locale
-     */
-    locale?: string;
-  };
-
-  /**
-   * Performance configurations
-   */
-  performance?: {
-    /**
-     * Enable performance monitoring
-     */
-    monitoring?: boolean;
-
-    /**
-     * Enable lazy loading
-     */
-    lazyLoad?: boolean;
-
-    /**
-     * Enable virtualization
-     */
-    virtualize?: boolean;
-  };
+  /** Performance settings */
+  performance?: PerformanceConfig;
 }

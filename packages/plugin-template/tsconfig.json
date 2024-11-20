@@ -3,11 +3,18 @@
   "compilerOptions": {
     "outDir": "dist",
     "rootDir": "src",
+    "baseUrl": ".",
+    "paths": {
+      "@modulator/types": ["../types/src"],
+      "@modulator/types/*": ["../types/src/*"],
+      "@modulator/core": ["../core/src"]
+    },
     "composite": true,
     "declaration": true,
-    "declarationMap": true
+    "declarationMap": true,
+    "types": ["node"]
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*.ts"],
   "exclude": ["**/*.test.ts", "**/*.spec.ts", "dist"],
-  "references": [{ "path": "../core" }, { "path": "../ui" }]
+  "references": [{ "path": "../types" }, { "path": "../core" }]
 }

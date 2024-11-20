@@ -1,84 +1,27 @@
-// Re-export all types
-export {
-  Block,
-  BlockData,
-  BlockConfig,
-  BlockRenderOptions,
-  BlockType,
-  BlockOperation,
-  BlockOperationType,
-  Position,
-  BlockSelection,
-  BlockInteractionManager,
-  BlockManagerContext,
-  BlockValidationResult,
-} from './blocks.js';
+// Export all types from each module
+export * from './blocks/index.js';
+export * from './core/index.js';
+export * from './plugins/index.js';
+export * from './ui/index.js';
+export * from './utils/index.js';
 
-export {
-  BlockEventType,
-  BlockEvent,
-  BlockEventMetadata,
-  EventHandler,
-  EventSubscription,
-  EventEmitterOptions,
-  EventEmitter,
-} from './event.js';
-
-export { EditorState, StateManager, EditorOptions, EditorCommand } from './editor.js';
-
-export {
-  PluginContext,
-  PluginState,
-  Plugin,
-  PluginConfig,
-  PluginStateManager,
-  PluginStateData,
-  PluginLifecycleHooks,
-  PluginHealth,
-} from './plugin.js';
-
-export {
-  PluginMessage,
-  PluginMessageType,
-  PluginMessageHandler,
-  PluginRequestHandler,
-  PluginMessaging,
-} from './messaging.js';
-
-export { BaseRenderer } from './renderer.js';
-
-export { Theme, ModulatorConfig } from './config.js';
-
-export {
-  SecurityContext,
-  SecurityPolicy,
-  SanitizationConfig,
-  ValidationOptions,
-  ValidationResult,
-} from './security.js';
-
-export {
+// Explicitly re-export toolbar types to resolve ambiguity
+export type {
   ToolbarContext,
-  ToolbarItem,
   ToolbarGroup,
-  ToolbarPlugin,
-  ToolbarPluginContext,
-} from './toolbar.js';
+  ToolbarItem,
+  ToolbarOptions,
+  ToolbarPosition,
+} from './plugins/toolbar.js';
 
-export {
-  AccessibilityContext,
-  AccessibilityConfig,
-  AccessibilityLevel,
-  LocaleConfig,
-  Translator,
-} from './accessibility.js';
+export type { BaseRenderer } from './core/renderer.js';
 
+// Re-export performance types explicitly to avoid conflicts
 export {
-  PerformanceMetrics,
+  type PerformanceMetrics,
+  type PerformanceConfig,
+  type PerformanceMonitor,
+  type PerformanceContext,
   OptimizationStrategy,
-  PerformanceConfig,
-  PerformanceContext,
-} from './performance.js';
-
-// Re-export selection types
-export * from './selection.js';
+  type LazyLoadOptions,
+} from './performance/index.js';

@@ -5,39 +5,26 @@
   "main": "./dist/index.js",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
-  "sideEffects": [
-    "**/*.css"
-  ],
+  "sideEffects": false,
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js",
       "default": "./dist/index.js"
-    },
-    "./styles/*": {
-      "import": "./styles/*",
-      "default": "./styles/*"
     }
   },
   "files": [
-    "dist",
-    "styles"
+    "dist"
   ],
   "scripts": {
+    "clean": "rm -rf dist",
     "build": "tsc --build",
-    "clean": "rm -rf dist"
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@modulator/core": "workspace:*",
     "@modulator/types": "workspace:*"
   },
   "devDependencies": {
-    "postcss": "^8.4.0",
-    "postcss-cli": "^10.1.0",
-    "postcss-import": "^15.1.0",
-    "postcss-modules": "^6.0.0",
-    "postcss-nested": "^6.0.1",
-    "postcss-preset-env": "^9.0.0",
     "typescript": "^5.0.0"
   },
   "engines": {

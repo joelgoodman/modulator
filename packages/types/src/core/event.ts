@@ -1,53 +1,70 @@
-import { BlockData, Position } from './blocks.js';
+import type { BlockData, Position } from '../blocks/types.js';
+import type {
+  EventHandler,
+  EventSubscription,
+  EventEmitter,
+  EventEmitterOptions,
+} from './types.js';
+
+export type { EventHandler, EventSubscription, EventEmitter, EventEmitterOptions };
 
 /**
  * Block event types
  */
-export type BlockEventType =
+export enum BlockEventType {
   // Block events
-  | 'block:created'
-  | 'block:updated'
-  | 'block:deleted'
-  | 'block:moved'
-  | 'block:selected'
-  | 'block:deselected'
-  | 'block:focused'
-  | 'block:blurred'
-  | 'block:cleared'
+  BLOCK_CREATED = 'block:created',
+  BLOCK_UPDATED = 'block:updated',
+  BLOCK_DELETED = 'block:deleted',
+  BLOCK_MOVED = 'block:moved',
+  BLOCK_SELECTED = 'block:selected',
+  BLOCK_DESELECTED = 'block:deselected',
+  BLOCK_FOCUSED = 'block:focused',
+  BLOCK_BLURRED = 'block:blurred',
+  BLOCK_CLEARED = 'block:cleared',
+
   // Editor events
-  | 'editor:initialized'
-  | 'editor:state-changed'
-  | 'editor:mode-changed'
-  | 'editor:theme-changed'
-  | 'editor:command-executed'
-  | 'editor:error'
-  | 'editor:destroyed'
+  EDITOR_INITIALIZED = 'editor:initialized',
+  EDITOR_STATE_CHANGED = 'editor:state-changed',
+  EDITOR_MODE_CHANGED = 'editor:mode-changed',
+  EDITOR_THEME_CHANGED = 'editor:theme-changed',
+  EDITOR_COMMAND_EXECUTED = 'editor:command-executed',
+  EDITOR_ERROR = 'editor:error',
+  EDITOR_DESTROYED = 'editor:destroyed',
+
   // History events
-  | 'history:undo'
-  | 'history:redo'
+  HISTORY_UNDO = 'history:undo',
+  HISTORY_REDO = 'history:redo',
+
   // Accessibility events
-  | 'accessibility:updated'
+  ACCESSIBILITY_UPDATED = 'accessibility:updated',
+
   // Selection events
-  | 'selection:changed';
+  SELECTION_CHANGED = 'selection:changed',
+
+  // Performance events
+  METRICS_UPDATE = 'metrics:update',
+  PERFORMANCE_MEASURE = 'performance:measure',
+}
 
 /**
  * Block event metadata
  */
 export interface BlockEventMetadata {
   /**
-   * Block data for create/update events
+   * Block data
    */
   blockData?: BlockData;
 
   /**
-   * Position for move events
+   * Block position
    */
   position?: Position;
 
   /**
-   * Additional event metadata
+   * Performance metrics
    */
-  [key: string]: unknown;
+  metrics?: Record<string, number>;
 }
 
 /**
@@ -60,92 +77,12 @@ export interface BlockEvent {
   type: BlockEventType;
 
   /**
-   * Target block ID
+   * Block ID
    */
   blockId: string;
 
   /**
-   * Event metadata
+   * Event data
    */
   data?: BlockEventMetadata;
-}
-
-/**
- * Event handler type
- */
-export type EventHandler<T = unknown> = (event: T) => void;
-
-/**
- * Event subscription options
- */
-export interface EventSubscription {
-  /**
-   * Event type to subscribe to
-   */
-  type: string;
-
-  /**
-   * Event handler function
-   */
-  handler: EventHandler;
-
-  /**
-   * Whether to handle event only once
-   */
-  once?: boolean;
-}
-
-/**
- * Event emitter options
- */
-export interface EventEmitterOptions {
-  /**
-   * Maximum number of listeners per event
-   */
-  maxListeners?: number;
-
-  /**
-   * Whether to capture stack trace for debugging
-   */
-  captureStackTrace?: boolean;
-}
-
-/**
- * Event emitter interface
- */
-export interface EventEmitter {
-  /**
-   * Add event listener
-   */
-  on<T = unknown>(type: string, handler: EventHandler<T>): void;
-
-  /**
-   * Add one-time event listener
-   */
-  once<T = unknown>(type: string, handler: EventHandler<T>): void;
-
-  /**
-   * Remove event listener
-   */
-  off<T = unknown>(type: string, handler: EventHandler<T>): void;
-
-  /**
-   * Remove all event listeners
-   */
-  clear(): void;
-
-  /**
-   * Emit event
-   */
-  emit<T = unknown>(event: T): void;
-
-  /**
-   * Get event listeners
-   */
-  listeners(type: string): EventHandler[];
-
-  /**
-   * Get event listener count
-   */
-  listenerCount(type: string): number;
 }

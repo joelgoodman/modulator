@@ -1,8 +1,10 @@
-import { ToolbarItem, ToolbarContext } from '@modulator/types';
-import { EventEmitter } from '@modulator/core';
+import { ToolbarItem, ToolbarContext, ToolbarEventType, EventEmitter } from '@modulator/types';
 import styles from '../../styles/components/toolbar.module.css';
 
-interface ButtonState {
+/**
+ * Button state
+ */
+export interface ButtonState {
   isActive: boolean;
   isDisabled: boolean;
   isHidden: boolean;
@@ -20,23 +22,15 @@ export interface ButtonProps {
   item: ToolbarItem;
 
   /**
-   * Current toolbar context
+   * Toolbar context
    */
   context?: ToolbarContext;
 
   /**
-   * Initial active state
+   * Initial state
    */
   isActive?: boolean;
-
-  /**
-   * Initial disabled state
-   */
   isDisabled?: boolean;
-
-  /**
-   * Initial hidden state
-   */
   isHidden?: boolean;
 }
 
@@ -54,17 +48,15 @@ export class ToolbarButton {
     this.item = props.item;
     this.context = props.context;
     this.state = {
-      isActive: props.isActive || false,
-      isDisabled: props.isDisabled || false,
-      isHidden: props.isHidden || false,
+      isActive: props.isActive ?? false,
+      isDisabled: props.isDisabled ?? false,
+      isHidden: props.isHidden ?? false,
       isHovered: false,
       isFocused: false,
     };
-    this.eventEmitter = new EventEmitter();
 
-    this.element = this.createButtonElement();
+    this.element = this.createButton();
     this.setupEventListeners();
-    this.updateButtonState();
   }
 
   /**
@@ -116,7 +108,7 @@ export class ToolbarButton {
     this.eventEmitter.clear();
   }
 
-  private createButtonElement(): HTMLButtonElement {
+  private createButton(): HTMLButtonElement {
     const button = document.createElement('button');
     button.className = styles['modulator-toolbar-button'];
     button.setAttribute('type', 'button');
@@ -238,7 +230,7 @@ export class ToolbarButton {
 
   private emitEvent(type: string, data: Record<string, unknown> = {}): void {
     this.eventEmitter.emit({
-      type,
+      type: type as ToolbarEventType,
       data: {
         buttonId: this.item.id,
         ...data,

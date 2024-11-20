@@ -2,38 +2,27 @@ import {
   ToolbarItem,
   ToolbarGroup,
   ToolbarConfig,
-  ToolbarRegistryContext,
   ToolbarState,
   ToolbarEvent,
   ToolbarGroupState,
+  EventEmitter,
 } from '@modulator/types';
-import { EventEmitter } from '@modulator/core';
-
-interface GroupState {
-  isCollapsed: boolean;
-  isVisible: boolean;
-}
 
 /**
  * Registry for toolbar items and groups
  */
-export class ToolbarRegistry implements ToolbarRegistryContext {
+export class ToolbarRegistry {
   private items: Map<string, ToolbarItem>;
   private groups: Map<string, ToolbarGroup>;
   private itemToGroup: Map<string, string>;
-  private eventEmitter: EventEmitter;
-  private state: {
-    activeItems: Set<string>;
-    disabledItems: Set<string>;
-    hiddenItems: Set<string>;
-    groupStates: Map<string, GroupState>;
-  };
+  private eventEmitter: EventEmitter<ToolbarEvent>;
+  private state: ToolbarState;
 
   constructor(config: ToolbarConfig) {
     this.items = new Map();
     this.groups = new Map();
     this.itemToGroup = new Map();
-    this.eventEmitter = new EventEmitter();
+    this.eventEmitter = new EventEmitter<ToolbarEvent>();
 
     this.state = {
       activeItems: new Set(),
@@ -43,6 +32,42 @@ export class ToolbarRegistry implements ToolbarRegistryContext {
     };
 
     this.initializeFromConfig(config);
+  }
+
+  /**
+   * Initialize registry from configuration
+   */
+  private initializeFromConfig(config: ToolbarConfig): void {
+    // Register default group if not provided
+    if (!config.groups?.length) {
+      this.registerGroup({
+        id: 'default',
+        name: 'Default Group',
+        position: 'left',
+      });
+    } else {
+      config.groups.forEach(group => this.registerGroup(group));
+    }
+
+    // Register items
+    config.items?.forEach(item => this.registerItem(item));
+  }
+
+  /**
+   * Register a toolbar group
+   */
+  registerGroup(group: ToolbarGroup): void {
+    if (this.groups.has(group.id)) {
+      throw new Error(`Group '${group.id}' is already registered`);
+    }
+
+    this.groups.set(group.id, group);
+    this.state.groupStates.set(group.id, {
+      isVisible: true,
+      isCollapsed: false,
+    });
+
+    this.emitEvent('toolbar:group:registered', { groupId: group.id });
   }
 
   /**
@@ -63,44 +88,24 @@ export class ToolbarRegistry implements ToolbarRegistryContext {
   }
 
   /**
+   * Get current toolbar state
+   */
+  getState(): ToolbarState {
+    return this.state;
+  }
+
+  /**
+   * Emit toolbar events
+   */
+  private emitEvent(type: ToolbarEvent['type'], data: Partial<ToolbarEvent['data']> = {}): void {
+    this.eventEmitter.emit(type, { type, data });
+  }
+
+  /**
    * Get the group ID for an item
    */
   getItemGroup(itemId: string): string | undefined {
     return this.itemToGroup.get(itemId);
-  }
-
-  /**
-   * Register a toolbar group
-   */
-  registerGroup(group: ToolbarGroup): void {
-    if (this.groups.has(group.id)) {
-      throw new Error(`Group '${group.id}' is already registered`);
-    }
-
-    this.groups.set(group.id, group);
-    this.state.groupStates.set(group.id, {
-      isCollapsed: false,
-      isVisible: true,
-    });
-
-    this.emitEvent('toolbar:group:registered', { groupId: group.id });
-  }
-
-  /**
-   * Get toolbar state
-   */
-  getState(): ToolbarState {
-    return {
-      activeItems: new Set(this.state.activeItems),
-      disabledItems: new Set(this.state.disabledItems),
-      hiddenItems: new Set(this.state.hiddenItems),
-      groupStates: new Map(
-        Array.from(this.state.groupStates.entries()).map(([id, state]) => [
-          id,
-          { ...state } as ToolbarGroupState,
-        ])
-      ),
-    };
   }
 
   /**
@@ -169,7 +174,7 @@ export class ToolbarRegistry implements ToolbarRegistryContext {
   /**
    * Update group state
    */
-  updateGroupState(groupId: string, updates: Partial<GroupState>): void {
+  updateGroupState(groupId: string, updates: Partial<ToolbarGroupState>): void {
     const groupState = this.state.groupStates.get(groupId);
     if (!groupState) {
       throw new Error(`Group '${groupId}' does not exist`);
@@ -199,103 +204,5 @@ export class ToolbarRegistry implements ToolbarRegistryContext {
     this.state.hiddenItems.clear();
     this.state.groupStates.clear();
     this.emitEvent('toolbar:cleared', {});
-  }
-
-  private initializeFromConfig(config: ToolbarConfig): void {
-    // Initialize default groups
-    const defaultGroups = [
-      {
-        id: 'default',
-        label: 'Default',
-        priority: 0,
-        items: [],
-      },
-      {
-        id: 'formatting',
-        label: 'Text Formatting',
-        priority: 1,
-        items: [],
-      },
-      {
-        id: 'advanced',
-        label: 'Advanced',
-        priority: 2,
-        items: [],
-      },
-    ];
-
-    // Register default groups
-    defaultGroups.forEach(group => {
-      if (!this.groups.has(group.id)) {
-        this.registerGroup(group);
-      }
-    });
-
-    // Register custom groups
-    if (config.customGroups) {
-      Object.entries(config.customGroups).forEach(([id, group]) => {
-        if (!this.groups.has(id)) {
-          this.registerGroup({
-            id,
-            label: group.label || id,
-            priority: group.priority || 0,
-            items: group.items || [],
-            isVisible: group.isVisible,
-          });
-        }
-      });
-    }
-
-    // Register default items
-    if (config.defaultItems) {
-      Object.entries(config.defaultItems).forEach(([id, item]) => {
-        if (!this.items.has(id)) {
-          this.registerItem(
-            {
-              id,
-              icon: '📝', // Default icon
-              label: item.label,
-              group: item.group,
-              shortcut: item.shortcut,
-              priority: 0,
-              onClick: () => {}, // No-op default handler
-              isActive: () => false,
-              isDisabled: () => !item.enabled,
-              isVisible: () => true,
-            },
-            item.group
-          );
-        }
-      });
-    }
-
-    // Register custom items
-    if (config.customItems) {
-      Object.entries(config.customItems).forEach(([id, item]) => {
-        if (!this.items.has(id)) {
-          if (!item.icon || !item.onClick) {
-            throw new Error(`Custom item '${id}' must have icon and onClick properties`);
-          }
-          this.registerItem(
-            {
-              id,
-              ...item,
-              priority: item.priority || 0,
-              isActive: item.isActive || (() => false),
-              isDisabled: item.isDisabled || (() => false),
-              isVisible: item.isVisible || (() => true),
-            } as ToolbarItem,
-            item.group || 'default'
-          );
-        }
-      });
-    }
-  }
-
-  private emitEvent(type: string, data: Record<string, unknown>): void {
-    this.eventEmitter.emit({
-      type,
-      data,
-    });
   }
 }

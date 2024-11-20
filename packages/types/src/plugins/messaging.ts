@@ -10,25 +10,52 @@ export type PluginMessageType =
 /**
  * Plugin message
  */
-export interface PluginMessage {
+export interface PluginMessage<T = unknown> {
+  /**
+   * Message type
+   */
   type: PluginMessageType;
+
+  /**
+   * Source plugin ID
+   */
   source: string;
+
+  /**
+   * Target plugin ID
+   */
   target?: string;
+
+  /**
+   * Broadcast channel
+   */
   channel?: string;
-  data: unknown;
+
+  /**
+   * Message data
+   */
+  data: T;
+
+  /**
+   * Message ID for request/response
+   */
   id?: string;
+
+  /**
+   * Message timestamp
+   */
   timestamp: number;
 }
 
 /**
  * Plugin message handler
  */
-export type PluginMessageHandler = (message: PluginMessage) => void;
+export type PluginMessageHandler<T = unknown> = (message: PluginMessage<T>) => void;
 
 /**
  * Plugin request handler
  */
-export type PluginRequestHandler = (data: unknown) => Promise<unknown>;
+export type PluginRequestHandler<T = unknown, R = unknown> = (data: T) => Promise<R>;
 
 /**
  * Plugin messaging interface
@@ -37,25 +64,25 @@ export interface PluginMessaging {
   /**
    * Send message to plugin
    */
-  sendMessage: (target: string, data: unknown) => void;
+  sendMessage<T>(target: string, data: T): void;
 
   /**
    * Broadcast message to all plugins
    */
-  broadcastMessage: (channel: string, data: unknown) => void;
+  broadcastMessage<T>(channel: string, data: T): void;
 
   /**
    * Send request to plugin
    */
-  sendRequest: (target: string, data: unknown, timeout?: number) => Promise<unknown>;
+  sendRequest<T, R>(target: string, data: T, timeout?: number): Promise<R>;
 
   /**
-   * Register message handler
+   * Handle incoming messages
    */
-  onMessage: (handler: PluginMessageHandler) => () => void;
+  onMessage<T>(handler: PluginMessageHandler<T>): () => void;
 
   /**
-   * Register request handler
+   * Handle incoming requests
    */
-  onRequest: (channel: string, handler: PluginRequestHandler) => () => void;
+  onRequest<T, R>(handler: PluginRequestHandler<T, R>): () => void;
 }

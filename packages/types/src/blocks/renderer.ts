@@ -1,4 +1,54 @@
-import { BlockConfig, BlockData, BlockRenderOptions } from './blocks.js';
+import type { BlockData } from './types.js';
+
+/**
+ * Block render options
+ */
+export interface BlockRenderOptions {
+  /**
+   * Enable editing
+   */
+  editable?: boolean;
+
+  /**
+   * Custom class name
+   */
+  className?: string;
+
+  /**
+   * Custom styles
+   */
+  style?: Partial<CSSStyleDeclaration>;
+
+  /**
+   * Custom attributes
+   */
+  attributes?: Record<string, string>;
+}
+
+/**
+ * Block configuration
+ */
+export interface BlockConfig<T extends BlockData = BlockData> {
+  /**
+   * Block ID
+   */
+  id: string;
+
+  /**
+   * Block type
+   */
+  type: string;
+
+  /**
+   * Block data
+   */
+  data: T;
+
+  /**
+   * Child block IDs
+   */
+  children?: string[];
+}
 
 /**
  * Base renderer interface
@@ -12,7 +62,7 @@ export interface BaseRenderer<T extends BlockData = BlockData> {
   /**
    * Update block
    */
-  updateBlock(block: BlockConfig<T>, element: HTMLElement): void;
+  updateBlock(block: BlockConfig<T>, element: HTMLElement, options?: BlockRenderOptions): void;
 
   /**
    * Remove block
@@ -20,17 +70,12 @@ export interface BaseRenderer<T extends BlockData = BlockData> {
   removeBlock(element: HTMLElement): void;
 
   /**
-   * Get block element
+   * Focus block
    */
-  getBlockElement(blockId: string): HTMLElement | null;
+  focusBlock(element: HTMLElement): void;
 
   /**
-   * Get all block elements
+   * Blur block
    */
-  getBlockElements(): HTMLElement[];
-
-  /**
-   * Clear renderer
-   */
-  clear(): void;
+  blurBlock(element: HTMLElement): void;
 }

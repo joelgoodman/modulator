@@ -1,12 +1,15 @@
-import {
+import type {
   Plugin,
   PluginContext,
-  ToolbarPlugin,
-  ToolbarPluginContext,
-  ToolbarItem,
-  ToolbarGroup,
   PluginStateData,
-  ExtendedPluginContext,
+  PluginStateManager,
+  PluginState,
+  PluginHealth,
+  PluginLifecycleHooks,
+  ToolbarPlugin,
+  ToolbarPosition,
+  ToolbarGroup,
+  ToolbarItem,
 } from '@modulator/types';
 
 /**
@@ -21,117 +24,136 @@ interface ExamplePluginState extends PluginStateData {
   };
 }
 
+const DEFAULT_STATE: ExamplePluginState = {
+  counter: 0,
+  lastClicked: null,
+  preferences: {
+    showIcon: true,
+    position: 'left',
+  },
+};
+
 /**
- * Example plugin implementation
+ * Example toolbar configuration
  */
-export class ExamplePlugin implements ToolbarPlugin<ExamplePluginState> {
-  id = 'example-plugin';
-  name = 'Example Plugin';
-  version = '1.0.0';
-
-  // Initial plugin state
-  initialState: ExamplePluginState = {
-    counter: 0,
-    lastClicked: null,
-    preferences: {
-      showIcon: true,
-      position: 'left',
-    },
-  };
-
-  // Optional: specify which block types this plugin supports
-  supportedBlocks = ['text', 'heading'];
-
-  // Optional: toolbar groups provided by this plugin
-  groups: ToolbarGroup<ExamplePluginState>[] = [
+const TOOLBAR_CONFIG = {
+  groups: [
     {
       id: 'example',
       label: 'Example Group',
-      priority: 100,
-      items: [],
+      items: [
+        {
+          id: 'example-button',
+          type: 'button',
+          label: 'Example',
+          icon: '★',
+          onClick: () => console.log('Clicked!'),
+        },
+      ],
     },
-  ];
+  ],
+};
 
-  // Optional: toolbar items provided by this plugin
-  items: ToolbarItem<ExamplePluginState>[] = [
-    {
-      id: 'example-item',
-      icon: '★', // Replace with actual icon
-      label: 'Example Item',
-      group: 'example',
-      shortcut: '⌘E',
-      isActive: context => {
-        const state = context.pluginState.getState();
-        return state.counter > 0;
-      },
-      onClick: context => {
-        const state = context.pluginState.getState();
-        try {
-          context.pluginState.setState({
-            counter: state.counter + 1,
-            lastClicked: new Date().toISOString(),
-          });
-        } catch (error) {
-          console.error('Error updating plugin state:', error);
-        }
-      },
+/**
+ * Example plugin implementation
+ */
+export class ExamplePlugin implements Plugin<ExamplePluginState>, ToolbarPlugin {
+  id = 'example-plugin';
+  name = 'Example Plugin';
+  version = '1.0.0';
+  initialState = DEFAULT_STATE;
+  position = ToolbarPosition.TOP;
+  groups = TOOLBAR_CONFIG.groups;
+
+  async initialize(
+    context: PluginContext & {
+      pluginState: PluginStateManager<ExamplePluginState>;
+    }
+  ): Promise<void> {
+    // Subscribe to events
+    context.eventEmitter.on('editor:initialized', () => {
+      console.log('Editor initialized');
+    });
+
+    // Initialize state
+    const state = context.pluginState.getState();
+    console.log('Initial state:', state);
+  }
+
+  async destroy(
+    context: PluginContext & {
+      pluginState: PluginStateManager<ExamplePluginState>;
+    }
+  ): Promise<void> {
+    // Clean up
+    console.log('Plugin destroyed');
+  }
+
+  async recover(
+    error: Error,
+    context: PluginContext & {
+      pluginState: PluginStateManager<ExamplePluginState>;
+    }
+  ): Promise<void> {
+    // Reset state on error
+    context.pluginState.resetState();
+    console.error('Plugin error:', error);
+  }
+
+  hooks: PluginLifecycleHooks<ExamplePluginState> = {
+    beforeInit: async context => {
+      console.log('Before initialization');
     },
-  ];
 
-  initialize(context: ExtendedPluginContext<ExamplePluginState>): void {
-    // Plugin initialization logic
-    console.log('Example plugin initialized');
+    afterInit: async context => {
+      console.log('After initialization');
+    },
 
-    // Subscribe to state changes
-    context.pluginState.subscribe(state => {
-      console.log('Plugin state updated:', state);
-    });
+    beforeEnable: async context => {
+      console.log('Before enable');
+    },
 
-    // Load preferences from storage
-    try {
-      context.pluginState.restore();
-    } catch (error) {
-      console.error('Error loading plugin state:', error);
-    }
-  }
+    afterEnable: async context => {
+      console.log('After enable');
+    },
 
-  initializeToolbar(context: ToolbarPluginContext<ExamplePluginState>): void {
-    // Register toolbar items
-    this.items.forEach(item => {
-      context.registerItem(item);
-    });
+    beforeDisable: async context => {
+      console.log('Before disable');
+    },
 
-    // Register toolbar groups
-    this.groups.forEach(group => {
-      context.registerGroup(group);
-    });
+    afterDisable: async context => {
+      console.log('After disable');
+    },
 
-    // Update item visibility based on preferences
-    const state = context.getContext().pluginState.getState();
-    if (!state.preferences.showIcon) {
-      this.items.forEach(item => {
-        context.hideItem(item.id);
-      });
-    }
-  }
+    onError: async (error, context) => {
+      console.error('Plugin error:', error);
+    },
 
-  destroy(context: ExtendedPluginContext<ExamplePluginState>): void {
-    // Persist state before cleanup
-    try {
-      context.pluginState.persist();
-    } catch (error) {
-      console.error('Error persisting plugin state:', error);
-    }
-    console.log('Example plugin destroyed');
-  }
+    checkHealth: async (context): Promise<Partial<PluginHealth>> => {
+      const state = context.pluginState.getState();
+      return {
+        status: 'healthy',
+        state: PluginState.ENABLED,
+        errorCount: 0,
+        uptime: performance.now(),
+        startTime: Date.now(),
+        dependencies: [],
+      };
+    },
+  };
 }
 
-// Re-export types that plugin authors might need
+// Re-export commonly used types for plugin authors
 export type {
   Plugin,
   PluginContext,
+  PluginStateData,
+  PluginStateManager,
+  PluginState,
+  PluginHealth,
+  PluginLifecycleHooks,
   ToolbarPlugin,
-  ToolbarPluginContext,
-  ToolbarItem,
+  ToolbarPosition,
   ToolbarGroup,
-};
+  ToolbarItem,
+} from '@modulator/types';
