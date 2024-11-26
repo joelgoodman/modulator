@@ -88,6 +88,20 @@ Type tests are located in `__tests__` directories. Run them with:
 pnpm test:types
 ```
 
+## API Documentation
+
+Comprehensive API documentation is available in the [docs/api](./docs/api) directory:
+
+### UI System
+- [Theme System](./docs/api/theme.md) - Theme configuration, color palettes, typography
+- [Animation System](./docs/api/animation.md) - Animation configuration, keyframes, performance
+- [Accessibility](./docs/api/accessibility.md) - WCAG compliance, screen readers, keyboard navigation
+- [Style System](./docs/api/styles.md) - Component styles, icons, theme overrides
+- [Components](./docs/api/components.md) - Base components, props, state management (Coming Soon)
+- [Toolbar](./docs/api/toolbar.md) - Toolbar items, layouts, event handling (Coming Soon)
+
+For a complete overview of all available types and documentation, see the [API Documentation Index](./docs/api/README.md).
+
 ## Contributing
 
 When adding new types:

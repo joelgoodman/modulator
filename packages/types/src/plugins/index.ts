@@ -1,38 +1,47 @@
+/**
+ * @fileoverview Plugin System Type Exports
+ * @module @modulator/types/plugins
+ */
+
 import type { BlockData } from '../blocks/types.js';
 import type { EventHandler, EventEmitter } from '../core/types.js';
 import type { StateManager } from '../core/state.js';
 
-// Re-export plugin types
 export type {
+  Plugin,
+  PluginConfig,
+  PluginContext,
+  PluginHealth,
   PluginStateData,
   PluginStateManager,
-  Plugin,
-  PluginContext,
-  PluginConfig,
-  PluginHealth,
-  PluginLifecycleHooks,
+  PluginMessaging,
+  PluginEvents
 } from './plugin.js';
 
-// Export PluginState as both type and value
-export { PluginState } from './plugin.js';
-
-// Re-export messaging types
 export type {
-  PluginMessaging,
-  PluginMessage,
-  PluginMessageType,
-  PluginMessageHandler,
-} from './messaging.js';
+  StateManagerAdapter,
+  EventHandler,
+  EventSubscription,
+  EventEmitter
+} from './stateManagerAdapter.js';
 
-// Re-export toolbar types
 export type {
-  ToolbarItem,
-  ToolbarGroup,
-  ToolbarContext,
-  ToolbarPlugin,
-  ToolbarPosition,
-  ToolbarOptions,
-} from './toolbar.js';
+  BlockInteractionManager,
+  GenericRenderer
+} from './interaction.js';
 
-// Export additional types for convenience
-export type { BlockData, EventHandler, EventEmitter, StateManager };
+/**
+ * Export additional core types for convenience
+ * @remarks
+ * Provides quick access to commonly used types from other modules
+ */
+export type {
+  /** Block data structure */
+  BlockData,
+  /** Generic event handler type */
+  EventHandler,
+  /** Event emitter interface */
+  EventEmitter,
+  /** State management interface */
+  StateManager,
+};

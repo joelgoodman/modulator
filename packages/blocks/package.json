@@ -23,8 +23,7 @@
   },
   "dependencies": {
     "@modulator/core": "workspace:*",
-    "@modulator/types": "workspace:*",
-    "@modulator/ui": "workspace:*"
+    "@modulator/types": "workspace:*"
   },
   "devDependencies": {
     "typescript": "^5.0.0"

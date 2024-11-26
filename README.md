@@ -3,15 +3,15 @@
 Modulator is an extensible block editor system that enables rich content editing in any JavaScript project. Built with TypeScript and designed to be framework-agnostic, Modulator provides a powerful foundation for building block-based editors similar to Notion, WordPress Gutenberg, or Editor.js.
 
 ## Project Structure
+
 modulator/
 ├── packages/
-│   ├── core/               # Core editor engine
-│   ├── basic-blocks/       # Standard block implementations
-│   ├── ui/                 # UI components
-│   └── utils/              # Shared utilities
-├── examples/               # Example implementations
-└── docs/                   # Documentation
-
+│ ├── core/ # Core editor engine
+│ ├── blockImplementations/ # Block implementations
+│ ├── uiComponents/ # UI components
+│ └── typeUtils/ # Type utilities and helpers
+├── examples/ # Example implementations
+└── docs/ # Documentation
 
 ## Getting Started
 
